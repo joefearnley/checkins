@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Checkins
  * Plugin URI: http://
- * Description: Add recent Foursquare checkins to your wordpress site.
+ * Description: Show recent Foursquare checkins to your WordPress site.
  * Version: 1.0
  * Author: Joe Fearnley
  * Author URI: http://joefearnley.com
@@ -10,7 +10,7 @@
  */
 
 /*
-    Copyright 2014 Joe Fearnley z(email : joe.fearnley@gmail.com)
+    Copyright 2014 Joe Fearnley (email : joe.fearnley@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -25,4 +25,9 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+
+// add admin menu to enter foursquare username/user id
+
+// add hook to call it when side bar loads
 
