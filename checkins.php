@@ -32,23 +32,27 @@
 class Checkins_Widget extends \WP_Widget {
 
     public function __construct() {
-        parent::__construct('checkins_widget',
-                __('Checkins','text_domain'),
-                ['description' => __( 'Display Foursquare Checkings', 'text_domain')]
-            );
+        $args = [
+                    'description' => __('Display Foursquare Checkings', 'text_domain'),
+                    'title' => __('Foursquare Checkings', 'text_domain')
+                ];
+
+        parent::__construct('checkins', __('Checkins', 'text_domain'), $args);
 	}
 
-	public function widget( $args, $instance ) {
-		// outputs the content of the widget
-	}
+    public function widget($args, $instance) {
+        echo $args['before_widget'];
+        echo $args['before_title'] . $this->widget_options['title'] . $args['after_title'];
 
- 	public function form( $instance ) {
+        echo __('<ul><li><a href="#">sadfasdfasdf</a></li><li><a href="#">yep yep</a></li></ul>', 'text_domain');
+        echo $args['after_widget'];
+    }
+
+ 	public function form($instance) {
 		// outputs the options form on admin
 	}
 
-	public function update( $new_instance, $old_instance ) {
-		// processes widget options to be saved
-	}
+	public function update($new_instance, $old_instance) {}
 }
 
 add_action( 'widgets_init', function() {
