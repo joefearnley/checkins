@@ -26,16 +26,13 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// TODO:
-//add admin menu to enter foursquare username/user id
-
 class Checkins_Widget extends \WP_Widget {
 
     public function __construct() {
         $args = [
-                    'description' => __('Display Foursquare Checkings', 'text_domain'),
-                    'title' => __('Foursquare Checkings', 'text_domain')
-                ];
+            'description' => __('Display Foursquare Checkins', 'text_domain'),
+            'title' => __('Foursquare Checkins', 'text_domain')
+        ];
 
         parent::__construct('checkins', __('Checkins', 'text_domain'), $args);
 	}
@@ -49,10 +46,12 @@ class Checkins_Widget extends \WP_Widget {
     }
 
  	public function form($instance) {
-		// outputs the options form on admin
+        echo '<label for="userid">Foursquare Username:</label>';
+        echo '<input type="text" name="userid" value="12345" />';
 	}
 
-	public function update($new_instance, $old_instance) {}
+    public function update($new_instance, $old_instance) {
+    }
 }
 
 add_action( 'widgets_init', function() {
