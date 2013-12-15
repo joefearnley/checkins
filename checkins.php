@@ -32,6 +32,9 @@ use Jcroll\FoursquareApiClient\Client\FoursquareClient;
 
 class Checkins_Widget extends \WP_Widget {
 
+    /**
+     * Register the widget
+     */
     public function __construct() {
         $args = [
             'description' => __('Display Foursquare Checkins', 'text_domain'),
@@ -41,6 +44,14 @@ class Checkins_Widget extends \WP_Widget {
         parent::__construct('checkins', __('Checkins', 'text_domain'), $args);
 	}
 
+    /**
+     * Front-end display of widget.
+     *
+     * @see WP_Widget::widget()
+     *
+     * @param array $args Widget arguments.
+     * @param array $instance Saved values from database.
+     */
     public function widget($args, $instance) {
         include 'checkins-config.php';
 
@@ -61,12 +72,10 @@ class Checkins_Widget extends \WP_Widget {
 
         $results = $command->execute();
 
-        var_dump($resutls);
-        die();
-
         $checkins = $results['response']['checkins']['items'];
 
         echo '<ul>';
+
         foreach($checkins as $checkin) {
             $day = date('m/d/Y', $checkin['createdAt']);
             $time = date('h:i:s a', $checkin['createdAt']);
@@ -74,16 +83,34 @@ class Checkins_Widget extends \WP_Widget {
 
             echo '<li>'.$location.' on '.$day.' at '.$time.'</li>';
         }
+
         echo '</ul>';
 
         echo $args['after_widget'];
     }
 
+    /**
+     * Back-end widget form.
+     *
+     * @see WP_Widget::form()
+     *
+     * @param array $instance Previously saved values from database.
+     */
  	public function form($instance) {
         echo '<label for="userid">Foursquare Username:</label>';
         echo '<input type="text" name="userid" value="12345" />';
 	}
 
+    /**
+     * Sanitize widget form values as they are saved.
+     *
+     * @see WP_Widget::update()
+     *
+     * @param array $new_instance Values just sent to be saved.
+     * @param array $old_instance Previously saved values from database.
+     *
+     * @return array Updated safe values to be saved.
+     */
     public function update($new_instance, $old_instance) {
     }
 }
