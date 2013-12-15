@@ -26,6 +26,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+require_once 'vendor/autoload.php';
+
+use Jcroll\FoursquareApiClient\Client\FoursquareClient;
+
 class Checkins_Widget extends \WP_Widget {
 
     public function __construct() {
@@ -38,10 +42,40 @@ class Checkins_Widget extends \WP_Widget {
 	}
 
     public function widget($args, $instance) {
+        include 'checkins-config.php';
+
         echo $args['before_widget'];
         echo $args['before_title'] . $this->widget_options['title'] . $args['after_title'];
 
-        echo __('<ul><li><a href="#">sadfasdfasdf</a></li><li><a href="#">yep yep</a></li></ul>', 'text_domain');
+        $client = FoursquareClient::factory([
+            'client_id' => $checkins_config['client_id'],
+            'client_secret' => $checkins_config['client_secret']
+        ]);
+
+        $client->addToken($checkins_config['auth_token']);
+
+        $command = $client->getCommand('users/checkins', [
+            'user_id' => 'self',
+            'limit' => '5'
+        ]);
+
+        $results = $command->execute();
+
+        var_dump($resutls);
+        die();
+
+        $checkins = $results['response']['checkins']['items'];
+
+        echo '<ul>';
+        foreach($checkins as $checkin) {
+            $day = date('m/d/Y', $checkin['createdAt']);
+            $time = date('h:i:s a', $checkin['createdAt']);
+            $location = $checkin['venue']['name'];
+
+            echo '<li>'.$location.' on '.$day.' at '.$time.'</li>';
+        }
+        echo '</ul>';
+
         echo $args['after_widget'];
     }
 
