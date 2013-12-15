@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Checkins
- * Plugin URI: http://
+ * Plugin URI: http://joefearnley/checkins
  * Description: Show recent Foursquare checkins to your WordPress site.
  * Version: 1.0
  * Author: Joe Fearnley
