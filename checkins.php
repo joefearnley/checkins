@@ -40,9 +40,8 @@ class Checkins_Widget extends \WP_Widget {
             'description' => __('Display Foursquare Checkins', 'text_domain'),
             'title' => __('Foursquare Checkins', 'text_domain')
         ];
-
         parent::__construct('checkins', __('Checkins', 'text_domain'), $args);
-	}
+    }
 
     /**
      * Front-end display of widget.
@@ -96,10 +95,10 @@ class Checkins_Widget extends \WP_Widget {
      *
      * @param array $instance Previously saved values from database.
      */
- 	public function form($instance) {
+    public function form($instance) {
         echo '<label for="userid">Foursquare Username:</label>';
         echo '<input type="text" name="userid" value="12345" />';
-	}
+    }
 
     /**
      * Sanitize widget form values as they are saved.
