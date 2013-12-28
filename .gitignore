@@ -2,4 +2,4 @@
 composer.phar
 composer.lock
 .DS_Store
-includes/`checkins-config.php
+checkins-config.php
