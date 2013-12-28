@@ -26,7 +26,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-require_once 'vendor/autoload.php';
+include_once dirname(__FILE__) . '/includes/checkins-config.php';
+include_once dirname(__FILE__) . '/vendor/autoload.php';
 
 use Jcroll\FoursquareApiClient\Client\FoursquareClient;
 
@@ -52,35 +53,34 @@ class Checkins_Widget extends \WP_Widget {
      * @param array $instance Saved values from database.
      */
     public function widget($args, $instance) {
-        include 'checkins-config.php';
-
         echo $args['before_widget'];
         echo $args['before_title'] . $this->widget_options['title'] . $args['after_title'];
-
-        $client = FoursquareClient::factory([
-            'client_id' => $checkins_config['client_id'],
-            'client_secret' => $checkins_config['client_secret']
-        ]);
-
-        $client->addToken($checkins_config['auth_token']);
-
-        $command = $client->getCommand('users/checkins', [
-            'user_id' => 'self',
-            'limit' => '5'
-        ]);
-
-        $results = $command->execute();
-
-        $checkins = $results['response']['checkins']['items'];
-
         echo '<ul>';
 
-        foreach($checkins as $checkin) {
-            $day = date('m/d/Y', $checkin['createdAt']);
-            $time = date('h:i:s a', $checkin['createdAt']);
-            $location = $checkin['venue']['name'];
+        try {
+            $client = FoursquareClient::factory([
+                'client_id' => CHECKINS_CLIENT_ID,
+                'client_secret' => CHECKINS_CLIENT_SECRET
+            ]);
 
-            echo '<li>'.$location.' on '.$day.' at '.$time.'</li>';
+            $client->addToken(CHECKINS_AUTH_TOKEN);
+
+            $command = $client->getCommand('users/checkins', [
+                'user_id' => 'self',
+                'limit' => '5'
+            ]);
+
+            $results = $command->execute();
+            $checkins = $results['response']['checkins']['items'];
+
+            foreach($checkins as $checkin) {
+                $day = date('m/d/Y', $checkin['createdAt']);
+                $time = date('h:i:s a', $checkin['createdAt']);
+                $location = $checkin['venue']['name'];
+                echo '<li>'.$location.' on '.$day.' at '.$time.'</li>';
+            }
+        } catch (Exception $e) {
+            echo '<li>Error Fetching Frousquare checkins - ' . $e->getMessage() . '</li>';
         }
 
         echo '</ul>';
