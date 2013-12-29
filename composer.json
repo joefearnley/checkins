@@ -1,6 +1,5 @@
 {
     "require": {
-        "jcroll/foursquare-api-client": "1.0.*",
         "mustache/mustache": "~2.1"
     }
 }
