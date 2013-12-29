@@ -96,8 +96,18 @@ class Checkins_Widget extends \WP_Widget {
      * @param array $instance Previously saved values from database.
      */
     public function form($instance) {
-        echo '<label for="userid">Foursquare Username:</label>';
-        echo '<input type="text" name="userid" value="12345" />';
+
+		$defaults = ['title' => 'Foursquare Checkins', 'email' => ''];
+        $instance = wp_parse_args((array) $instance, $defaults);
+
+        $title = $instance['title'];
+        $email = $instance['email'];
+
+        echo '<p><label for="' . $this->get_field_id('title') . '">Title:</label>';
+        echo '<input class="widefat" id="' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') .'" type="text" value=""/></p>';
+
+        echo '<p><label for="' . $this->get_field_id('email') . '">Foursquare Email:</label>';
+        echo '<input class="widefat" id="' . $this->get_field_id('email') . '" name="' . $this->get_field_name('email') .'" type="text" value="' . $email .'"/></p>';
     }
 
     /**
@@ -111,7 +121,33 @@ class Checkins_Widget extends \WP_Widget {
      * @return array Updated safe values to be saved.
      */
     public function update($new_instance, $old_instance) {
+
+        $title = $new_instance['title'];
+        $email = $new_instance['email'];
+
+        $instance = [];
+
         // check for user name / id and store it....
+        try {
+            $client = FoursquareClient::factory([
+                'client_id' => CHECKINS_CLIENT_ID,
+                'client_secret' => CHECKINS_CLIENT_SECRET
+            ]);
+
+            $client->addToken(CHECKINS_AUTH_TOKEN);
+
+            $command = $client->getCommand('users/search', [
+                'email' => $email
+            ]);
+
+            $results = $command->execute();
+            $instance['user_id'] = $results['response']['results']['id'];
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            die();
+        }
+
+        return $instance;
     }
 }
 
