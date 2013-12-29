@@ -29,14 +29,7 @@
 include_once dirname(__FILE__) . '/includes/checkins-config.php';
 include_once dirname(__FILE__) . '/vendor/autoload.php';
 
-use Jcroll\FoursquareApiClient\Client\FoursquareClient;
-
 class Checkins_Widget extends \WP_Widget {
-
-    /**
-     * @var Foursquare API client
-     */
-    private $foursqaure_client;
 
     /**
      * @var Mustache template engine
@@ -52,13 +45,6 @@ class Checkins_Widget extends \WP_Widget {
             'title' => __('Foursquare Checkins', 'text_domain'),
             'limit' => 5
         ];
-
-        $this->foursquare_client = FoursquareClient::factory([
-            'client_id' => CHECKINS_CLIENT_ID,
-            'client_secret' => CHECKINS_CLIENT_SECRET
-        ]);
-
-        $this->foursquare_client->addToken(CHECKINS_AUTH_TOKEN);
 
         $this->mustache = new Mustache_Engine();
 
@@ -76,18 +62,8 @@ class Checkins_Widget extends \WP_Widget {
     public function widget($args, $instance) {
         echo $args['before_widget'];
 
-        $title = $this->widget_options['title'];
-        $limit = $this->widget_options['limit'];
-
-        $custom_limit = apply_filters('widget_title', $instance['title']);
-        if(!empty($custom_title)) {
-            $title = $custom_title;
-        }
-
-        $custom_limit = $instance['title'];
-        if(!empty($custom_title)) {
-            $limit = $custom_title;
-        }
+        $title = (!empty($instance['title'])) ? $instance['title'] : $this->widget_options['title'];
+        $limit = (!empty($instance['title'])) ? $instance['limit'] : $this->widget_options['limit'];
 
         echo $args['before_title'] . $title . $args['after_title'];
         echo '<ul>';
@@ -103,7 +79,7 @@ class Checkins_Widget extends \WP_Widget {
 
             $feed = simplexml_load_string($results);
 
-            for($i = 0; $i <= 5; $i++) {
+            for($i = 0; $i < $limit; $i++) {
                 $checkin = $feed->channel->item[$i];
                 $checkin_date = date_parse($checkin->pubDate);
 
