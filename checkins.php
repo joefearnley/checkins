@@ -141,7 +141,8 @@ class Checkins_Widget extends \WP_Widget {
         $context = [
             'id' => $this->get_field_id('email'),
             'name' => $this->get_field_name('email'),
-            'label_text' => 'Foursquare Email'
+            'label_text' => 'Foursquare Email',
+            'value' => $email
         ];
         echo $this->mustache->render($template, $context);
     }
@@ -163,6 +164,7 @@ class Checkins_Widget extends \WP_Widget {
 
         $instance = [];
         $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
+        $instance['email'] = (!empty($new_instance['email'])) ? strip_tags($new_instance['email']) : '';
 
         // check for user name / id and store it....
         try {
@@ -177,7 +179,7 @@ class Checkins_Widget extends \WP_Widget {
             echo '<p>' . $e->getMessage() . '</p>';
             die();
         }
- 
+
         return $instance;
     }
 }
