@@ -34,6 +34,11 @@ use Jcroll\FoursquareApiClient\Client\FoursquareClient;
 class Checkins_Widget extends \WP_Widget {
 
     /**
+     * @var Foursquare API client
+     */
+    private $foursqaure_client;
+
+    /**
      * Register the widget
      */
     public function __construct() {
@@ -41,6 +46,14 @@ class Checkins_Widget extends \WP_Widget {
             'description' => __('Display Foursquare Checkins', 'text_domain'),
             'title' => __('Foursquare Checkins', 'text_domain')
         ];
+
+        $this->foursquare_client = FoursquareClient::factory([
+            'client_id' => CHECKINS_CLIENT_ID,
+            'client_secret' => CHECKINS_CLIENT_SECRET
+        ]);
+
+        $this->foursquare_client->addToken(CHECKINS_AUTH_TOKEN);
+
         parent::__construct('checkins', __('Checkins', 'text_domain'), $args);
     }
 
@@ -58,14 +71,7 @@ class Checkins_Widget extends \WP_Widget {
         echo '<ul>';
 
         try {
-            $client = FoursquareClient::factory([
-                'client_id' => CHECKINS_CLIENT_ID,
-                'client_secret' => CHECKINS_CLIENT_SECRET
-            ]);
-
-            $client->addToken(CHECKINS_AUTH_TOKEN);
-
-            $command = $client->getCommand('users/checkins', [
+            $command = $this->foursquare_client->getCommand('users/checkins', [
                 'user_id' => 'self',
                 'limit' => '5'
             ]);
@@ -129,14 +135,7 @@ class Checkins_Widget extends \WP_Widget {
 
         // check for user name / id and store it....
         try {
-            $client = FoursquareClient::factory([
-                'client_id' => CHECKINS_CLIENT_ID,
-                'client_secret' => CHECKINS_CLIENT_SECRET
-            ]);
-
-            $client->addToken(CHECKINS_AUTH_TOKEN);
-
-            $command = $client->getCommand('users/search', [
+            $command = $this->foursquare_client->getCommand('users/search', [
                 'email' => $email
             ]);
 
