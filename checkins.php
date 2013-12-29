@@ -39,6 +39,11 @@ class Checkins_Widget extends \WP_Widget {
     private $foursqaure_client;
 
     /**
+     * @var Mustache template engine
+     */
+    private $mustache;
+
+    /**
      * Register the widget
      */
     public function __construct() {
@@ -53,6 +58,8 @@ class Checkins_Widget extends \WP_Widget {
         ]);
 
         $this->foursquare_client->addToken(CHECKINS_AUTH_TOKEN);
+
+        $this->mustache = new Mustache_Engine();
 
         parent::__construct('checkins', __('Checkins', 'text_domain'), $args);
     }
@@ -80,13 +87,17 @@ class Checkins_Widget extends \WP_Widget {
             $checkins = $results['response']['checkins']['items'];
 
             foreach($checkins as $checkin) {
-                $day = date('m/d', $checkin['createdAt']);
-                $location = $checkin['venue']['name'];
-                $id = $checkin['id'];
-                echo '<li><a href="http://foursquare.com/joefearnley/checkin/' . $id . '">' . $location . ' on ' . $day . '</a></li>';
+                $context = [
+                    'id' => $checkin['id'],
+                    'location' => $checkin['venue']['name'],
+                    'date' => date('m/d', $checkin['createdAt'])
+                ];
+
+                $template = '<li><a href="http://foursquare.com/joefearnley/checkin/{{id}}">{{location}} on {{date}}</a></li>';
+                echo $this->mustache->render($template, $context);
             }
         } catch (Exception $e) {
-            echo '<li>Error Fetching Frousquare checkins - ' . $e->getMessage() . '</li>';
+            echo $this->mustache->render('<li>Error Fetching Frousquare checkins - {{message}}</li>', ['message' => $e->getMessage()]);
         }
 
         echo '</ul>';
@@ -108,15 +119,22 @@ class Checkins_Widget extends \WP_Widget {
         $title = $instance['title'];
         $email = $instance['email'];
 
-        $title_id  = $this->get_field_id('title');
-        $title_name = $this->get_field_name('title');
-        echo '<p><label for="' . $title_id . '">Title:</label>';
-        echo '<input class="widefat" id="' . $title_id . '" name="' . $title_name .'" type="text" value=""/></p>';
+        $template = '<p><label for="{{id}}">{{label_text}}:</label>
+                    <input class="widefat" id="{id}}" name="{{name}}" type="text" value=""/></p>';
 
-        $email_id  = $this->get_field_id('email');
-        $email_name = $this->get_field_name('email');
-        echo '<p><label for="' . $email_id . '">Foursquare Email:</label>';
-        echo '<input class="widefat" id="' . $email_id . '" name="' . $email_name .'" type="text" value="' . $email .'"/></p>';
+        $context = [
+            'id' => $this->get_field_id('title'),
+            'name' => $this->get_field_name('title'),
+            'label_text' => 'Title'
+        ];
+        echo $this->mustache->render($template, $context);
+
+        $context = [
+            'id' => $this->get_field_id('email'),
+            'name' => $this->get_field_name('email'),
+            'label_text' => 'Foursquare Email'
+        ];
+        echo $this->mustache->render($template, $context);
     }
 
     /**
