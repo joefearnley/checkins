@@ -109,11 +109,15 @@ class Checkins_Widget extends \WP_Widget {
         $title = $instance['title'];
         $email = $instance['email'];
 
-        echo '<p><label for="' . $this->get_field_id('title') . '">Title:</label>';
-        echo '<input class="widefat" id="' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') .'" type="text" value=""/></p>';
+        $title_id  = $this->get_field_id('title');
+        $title_name = $this->get_field_name('title');
+        echo '<p><label for="' . $title_id . '">Title:</label>';
+        echo '<input class="widefat" id="' . $title_id . '" name="' . $title_name .'" type="text" value=""/></p>';
 
-        echo '<p><label for="' . $this->get_field_id('email') . '">Foursquare Email:</label>';
-        echo '<input class="widefat" id="' . $this->get_field_id('email') . '" name="' . $this->get_field_name('email') .'" type="text" value="' . $email .'"/></p>';
+        $email_id  = $this->get_field_id('email');
+        $email_name = $this->get_field_name('email');
+        echo '<p><label for="' . $email_id . '">Foursquare Email:</label>';
+        echo '<input class="widefat" id="' . $email_id . '" name="' . $email_name .'" type="text" value="' . $email .'"/></p>';
     }
 
     /**
