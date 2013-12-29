@@ -142,7 +142,8 @@ class Checkins_Widget extends \WP_Widget {
             $results = $command->execute();
             $instance['user_id'] = $results['response']['results']['id'];
         } catch (Exception $e) {
-            echo $e->getMessage();
+            // not sure what the hell this function does, so not sure what he hell to do here...
+            echo '<p>' . $e->getMessage() . '</p>';
             die();
         }
 
