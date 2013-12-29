@@ -74,7 +74,15 @@ class Checkins_Widget extends \WP_Widget {
      */
     public function widget($args, $instance) {
         echo $args['before_widget'];
-        echo $args['before_title'] . $this->widget_options['title'] . $args['after_title'];
+
+        $title = $this->widget_options['title'];
+        $custom_title = apply_filters('widget_title', $instance['title']);
+
+        if(!empty($custom_title)) {
+            $title = $custom_title;
+        }
+
+        echo $args['before_title'] . $title . $args['after_title'];
         echo '<ul>';
 
         try {
@@ -120,12 +128,13 @@ class Checkins_Widget extends \WP_Widget {
         $email = $instance['email'];
 
         $template = '<p><label for="{{id}}">{{label_text}}:</label>
-                    <input class="widefat" id="{id}}" name="{{name}}" type="text" value=""/></p>';
+                    <input class="widefat" id="{id}}" name="{{name}}" type="text" value="{{value}}"/></p>';
 
         $context = [
             'id' => $this->get_field_id('title'),
             'name' => $this->get_field_name('title'),
-            'label_text' => 'Title'
+            'label_text' => 'Title',
+            'value' => $title
         ];
         echo $this->mustache->render($template, $context);
 
@@ -153,6 +162,7 @@ class Checkins_Widget extends \WP_Widget {
         $email = $new_instance['email'];
 
         $instance = [];
+        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
 
         // check for user name / id and store it....
         try {
@@ -167,7 +177,7 @@ class Checkins_Widget extends \WP_Widget {
             echo '<p>' . $e->getMessage() . '</p>';
             die();
         }
-
+ 
         return $instance;
     }
 }
