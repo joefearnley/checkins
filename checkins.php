@@ -102,8 +102,7 @@ class Checkins_Widget extends \WP_Widget {
      * @param array $instance Previously saved values from database.
      */
     public function form($instance) {
-
-		$defaults = ['title' => 'Foursquare Checkins', 'email' => ''];
+        $defaults = ['title' => 'Foursquare Checkins', 'email' => ''];
         $instance = wp_parse_args((array) $instance, $defaults);
 
         $title = $instance['title'];
