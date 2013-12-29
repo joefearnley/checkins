@@ -49,7 +49,8 @@ class Checkins_Widget extends \WP_Widget {
     public function __construct() {
         $args = [
             'description' => __('Display Foursquare Checkins', 'text_domain'),
-            'title' => __('Foursquare Checkins', 'text_domain')
+            'title' => __('Foursquare Checkins', 'text_domain'),
+            'limit' => 5
         ];
 
         $this->foursquare_client = FoursquareClient::factory([
@@ -76,40 +77,50 @@ class Checkins_Widget extends \WP_Widget {
         echo $args['before_widget'];
 
         $title = $this->widget_options['title'];
-        $custom_title = apply_filters('widget_title', $instance['title']);
+        $limit = $this->widget_options['limit'];
 
+        $custom_limit = apply_filters('widget_title', $instance['title']);
         if(!empty($custom_title)) {
             $title = $custom_title;
+        }
+
+        $custom_limit = $instance['title'];
+        if(!empty($custom_title)) {
+            $limit = $custom_title;
         }
 
         echo $args['before_title'] . $title . $args['after_title'];
         echo '<ul>';
 
-        try {
-            $command = $this->foursquare_client->getCommand('users/checkins', [
-                'user_id' => 'self',
-                'limit' => '5'
-            ]);
+        $feed_url = $instance['feed'];
 
-            $results = $command->execute();
-            $checkins = $results['response']['checkins']['items'];
+        if(!empty($feed_url)) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $feed_url);
+            $results = curl_exec($ch);
+            curl_close($ch);
 
-            foreach($checkins as $checkin) {
+            $feed = simplexml_load_string($results);
+
+            for($i = 0; $i <= 5; $i++) {
+                $checkin = $feed->channel->item[$i];
+                $checkin_date = date_parse($checkin->pubDate);
+
                 $context = [
-                    'id' => $checkin['id'],
-                    'location' => $checkin['venue']['name'],
-                    'date' => date('m/d', $checkin['createdAt'])
+                    'link' => $checkin->link,
+                    'location' => $checkin->title,
+                    'date' => $checkin_date['month'] . '/' . $checkin_date['day']
                 ];
 
-                $template = '<li><a href="http://foursquare.com/joefearnley/checkin/{{id}}">{{location}} on {{date}}</a></li>';
+                $template = '<li><a href="{{link}}">{{location}} on {{date}}</a></li>';
                 echo $this->mustache->render($template, $context);
             }
-        } catch (Exception $e) {
-            echo $this->mustache->render('<li>Error Fetching Frousquare checkins - {{message}}</li>', ['message' => $e->getMessage()]);
+        } else {
+            echo $this->mustache->render('<li>Please enter Foursquare history feed in Checkins Widget settings');
         }
 
         echo '</ul>';
-
         echo $args['after_widget'];
     }
 
@@ -125,7 +136,8 @@ class Checkins_Widget extends \WP_Widget {
         $instance = wp_parse_args((array) $instance, $defaults);
 
         $title = $instance['title'];
-        $email = $instance['email'];
+        $feed = $instance['feed'];
+        $limit = $instance['limit'];
 
         $template = '<p><label for="{{id}}">{{label_text}}:</label>
                     <input class="widefat" id="{id}}" name="{{name}}" type="text" value="{{value}}"/></p>';
@@ -139,10 +151,21 @@ class Checkins_Widget extends \WP_Widget {
         echo $this->mustache->render($template, $context);
 
         $context = [
-            'id' => $this->get_field_id('email'),
-            'name' => $this->get_field_name('email'),
-            'label_text' => 'Foursquare Email',
-            'value' => $email
+            'id' => $this->get_field_id('feed'),
+            'name' => $this->get_field_name('feed'),
+            'label_text' => 'Foursquare RSS Feed',
+            'value' => $feed
+        ];
+        echo $this->mustache->render($template, $context);
+
+        $template = '<p><label for="{{id}}">{{label_text}}:</label>
+                    <input id="{id}}" name="{{name}}" type="text" size="3" value="{{value}}"/></p>';
+
+        $context = [
+            'id' => $this->get_field_id('limit'),
+            'name' => $this->get_field_name('limit'),
+            'label_text' => 'Number of checkins to show',
+            'value' => $limit
         ];
         echo $this->mustache->render($template, $context);
     }
@@ -158,27 +181,10 @@ class Checkins_Widget extends \WP_Widget {
      * @return array Updated safe values to be saved.
      */
     public function update($new_instance, $old_instance) {
-
-        $title = $new_instance['title'];
-        $email = $new_instance['email'];
-
         $instance = [];
         $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-        $instance['email'] = (!empty($new_instance['email'])) ? strip_tags($new_instance['email']) : '';
-
-        // check for user name / id and store it....
-        try {
-            $command = $this->foursquare_client->getCommand('users/search', [
-                'email' => $email
-            ]);
-
-            $results = $command->execute();
-            $instance['user_id'] = $results['response']['results']['id'];
-        } catch (Exception $e) {
-            // not sure what the hell this function does, so not sure what he hell to do here...
-            echo '<p>' . $e->getMessage() . '</p>';
-            die();
-        }
+        $instance['feed'] = (!empty($new_instance['feed'])) ? strip_tags($new_instance['feed']) : '';
+        $instance['limit'] = (!empty($new_instance['limit'])) ? strip_tags($new_instance['limit']) : '';
 
         return $instance;
     }
