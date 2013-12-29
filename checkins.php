@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Checkins
- * Plugin URI: http://joefearnley/checkins
+ * Plugin URI: http://joefearnley.com/checkins
  * Description: Show recent Foursquare checkins to your WordPress site.
  * Version: 1.0
  * Author: Joe Fearnley
@@ -74,10 +74,10 @@ class Checkins_Widget extends \WP_Widget {
             $checkins = $results['response']['checkins']['items'];
 
             foreach($checkins as $checkin) {
-                $day = date('m/d/Y', $checkin['createdAt']);
-                $time = date('h:i:s a', $checkin['createdAt']);
+                $day = date('m/d', $checkin['createdAt']);
                 $location = $checkin['venue']['name'];
-                echo '<li>'.$location.' on '.$day.' at '.$time.'</li>';
+                $id = $checkin['id'];
+                echo '<li><a href="http://foursquare.com/joefearnley/checkin/' . $id . '">' . $location . ' on ' . $day . '</a></li>';
             }
         } catch (Exception $e) {
             echo '<li>Error Fetching Frousquare checkins - ' . $e->getMessage() . '</li>';
@@ -111,6 +111,7 @@ class Checkins_Widget extends \WP_Widget {
      * @return array Updated safe values to be saved.
      */
     public function update($new_instance, $old_instance) {
+        // check for user name / id and store it....
     }
 }
 
