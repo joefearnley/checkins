@@ -93,7 +93,7 @@ class Checkins_Widget extends \WP_Widget {
                 echo $this->mustache->render($template, $context);
             }
         } else {
-            echo $this->mustache->render('<li>Please enter Foursquare history feed in Checkins Widget settings');
+            echo $this->mustache->render('<li>Please enter Foursquare history feed in Checkins Widget settings</li>');
         }
 
         echo '</ul>';
