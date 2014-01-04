@@ -10,9 +10,9 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
 1. Download the plugin 
 2. Unzip in the `%wordpress_home%/wp-content/plugins/` directory
 3. Install dependencies using composer
-
-    $ composer install
-
+```
+$ composer install
+```
 4. Launch WordPress installation
 3. Activate in the admin area (`Plugins -> Installed Plugins`) by
    clicking `Activate` under **Checkins**
