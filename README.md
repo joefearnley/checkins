@@ -19,9 +19,9 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
 ### Get Foursquare activity feed
 1. Log in to you Foursquare account through the website.
 2. After logging in navagate to
-   [https://foursquare.com/feeds/](https://foursquare.com/feeds/).
+   [https://foursquare.com/feeds/](https://foursquare.com/feeds/)
 3. Under **Your Foursquare Feeds** copy the **RSS** link, you will need
-   that in a minute.
+   that in a minute
 
 ### Add widget to site
 1. In the WordPress admin area navigate to `Appearence -> Widgets`
@@ -29,7 +29,7 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
    Area** and click on it.
 3. Fill in the three fields accordingly:
     1. **Title** - how you want the widget title to be displayed
-    2. **RSS Feed** - the feed you copied from the Foursquare site
+    2. **Foursquare RSS Feed** - the feed you copied from the Foursquare site
     3. **Number of checkins to show** - self explanitory
 
 ## Liscense
