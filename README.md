@@ -4,7 +4,7 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
 
 ## Dependencies
 * PHP 5.3+
-* Composer
+* [Composer](http://getcomposer.org/)
 
 ## Installation
 1. Download the plugin 
