@@ -36,4 +36,4 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
     3. **Number of checkins to show** - self explanitory
 
 ## Liscense
-* [MIT](https://github.com/joefearnley/checkins/blob/master/LICENSE)
+* [GPL2](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
