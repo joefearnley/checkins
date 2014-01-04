@@ -15,7 +15,7 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
 3. Activate in the admin area (`Plugins -> Installed Plugins`) by
    clicking `Activate` under **Checkins**
 
-## Adding to wordpress site
+## Adding to WordPress site
 ### Get Foursquare activity feed
 1. Log in to you Foursquare account through the website.
 2. After logging in navagate to
