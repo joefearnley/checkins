@@ -1,6 +1,6 @@
 ## Checkins
 
-Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
+Checkins ia a WordPress Widget that displays Foursquare checkins
 
 ## Dependencies
 * PHP 5.3+
