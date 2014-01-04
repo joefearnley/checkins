@@ -26,7 +26,7 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
 ### Add widget to site
 1. In the WordPress admin area navigate to `Appearence -> Widgets`
 2. Under **Available Widgets** drag **Checkins** over the **Main Widget
-   Area** and click on it.
+   Area** and click on it to show configuration fields
 3. Fill in the three fields accordingly:
     1. **Title** - how you want the widget title to be displayed
     2. **Foursquare RSS Feed** - the feed you copied from the Foursquare site
