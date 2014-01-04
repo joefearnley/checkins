@@ -10,14 +10,17 @@ Checkins ia a WordPress Widget that displays Foursquare checkins on your site.
 1. Download the plugin 
 2. Unzip in the `%wordpress_home%/wp-content/plugins/` directory
 3. Install dependencies using composer
+
     $ composer install
+
 4. Launch WordPress installation
 3. Activate in the admin area (`Plugins -> Installed Plugins`) by
    clicking `Activate` under **Checkins**
 
 ## Adding to WordPress site
 ### Get Foursquare activity feed
-1. Log in to you Foursquare account through the website.
+1. Log in to your Foursquare account [through the
+   website](https://foursquare.com/login)
 2. After logging in navagate to
    [https://foursquare.com/feeds/](https://foursquare.com/feeds/)
 3. Under **Your Foursquare Feeds** copy the **RSS** link, you will need
