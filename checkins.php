@@ -26,15 +26,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once dirname(__FILE__) . '/includes/checkins-config.php';
-include_once dirname(__FILE__) . '/vendor/autoload.php';
-
 class Checkins_Widget extends \WP_Widget {
-
-    /**
-     * @var Mustache template engine
-     */
-    private $mustache;
 
     /**
      * Register the widget
@@ -45,8 +37,6 @@ class Checkins_Widget extends \WP_Widget {
             'title' => __('Foursquare Checkins', 'text_domain'),
             'limit' => 5
         ];
-
-        $this->mustache = new Mustache_Engine();
 
         parent::__construct('checkins', __('Checkins', 'text_domain'), $args);
     }
@@ -82,18 +72,12 @@ class Checkins_Widget extends \WP_Widget {
             for($i = 0; $i < $limit; $i++) {
                 $checkin = $feed->channel->item[$i];
                 $checkin_date = date_parse($checkin->pubDate);
+                $checkin_date =  $checkin_date['month'] . '/' . $checkin_date['day'];
 
-                $context = [
-                    'link' => $checkin->link,
-                    'location' => $checkin->title,
-                    'date' => $checkin_date['month'] . '/' . $checkin_date['day']
-                ];
-
-                $template = '<li><a href="{{link}}">{{location}} on {{date}}</a></li>';
-                echo $this->mustache->render($template, $context);
+                echo '<li><a href="' . $checkin->link .'">' . $checkin->title . ' on ' . $checkin_date . '</a></li>';
             }
         } else {
-            echo $this->mustache->render('<li>Please enter Foursquare history feed in Checkins Widget settings</li>');
+            echo '<li>Please enter Foursquare history feed in Checkins Widget settings</li>';
         }
 
         echo '</ul>';
@@ -111,39 +95,17 @@ class Checkins_Widget extends \WP_Widget {
         $defaults = ['title' => 'Foursquare Checkins', 'email' => ''];
         $instance = wp_parse_args((array) $instance, $defaults);
 
-        $title = $instance['title'];
-        $feed = $instance['feed'];
-        $limit = $instance['limit'];
+        echo '<p><label for="' . $this->get_field_id('title') . '">Title:</label>';
+        echo '<input class="widefat" id="' . $this->get_field_id('title') . '"';
+        echo 'name="' . $this->get_field_name('title')  . '" type="text" value="' . $instance['title'] .'"/></p>';
 
-        $template = '<p><label for="{{id}}">{{label_text}}:</label>
-                    <input class="widefat" id="{id}}" name="{{name}}" type="text" value="{{value}}"/></p>';
+        echo '<p><label for="' . $this->get_field_id('feed') . '">Foursquare RSS Feed:</label>';
+        echo '<input class="widefat" id="' . $this->get_field_name('feed') . '"';
+        echo 'name="' . $this->get_field_name('feed') . '" type="text" value="' . $instance['feed'] . '"/></p>';
 
-        $context = [
-            'id' => $this->get_field_id('title'),
-            'name' => $this->get_field_name('title'),
-            'label_text' => 'Title',
-            'value' => $title
-        ];
-        echo $this->mustache->render($template, $context);
-
-        $context = [
-            'id' => $this->get_field_id('feed'),
-            'name' => $this->get_field_name('feed'),
-            'label_text' => 'Foursquare RSS Feed',
-            'value' => $feed
-        ];
-        echo $this->mustache->render($template, $context);
-
-        $template = '<p><label for="{{id}}">{{label_text}}:</label>
-                    <input id="{id}}" name="{{name}}" type="text" size="3" value="{{value}}"/></p>';
-
-        $context = [
-            'id' => $this->get_field_id('limit'),
-            'name' => $this->get_field_name('limit'),
-            'label_text' => 'Number of checkins to show',
-            'value' => $limit
-        ];
-        echo $this->mustache->render($template, $context);
+        echo '<p><label for="' . $this->get_field_id('limit') . '">Number of checkins to show: </label>';
+        echo '<input id="' . $this->get_field_name('limit') . '"';
+        echo 'name="' . $this->get_field_name('limit') . '" type="text" size="2" value="' . $instance['limit'] . '"/></p>';
     }
 
     /**
